@@ -18,6 +18,36 @@ struct node {
 	struct node *next;
 };
 
-struct node * sortLinkedList(struct node *head) {
+struct node* merge(struct node* list1, struct node* list2);
+
+struct node *sortLinkedList(struct node *head) {
+	if (head == NULL || head->next == NULL)
+		return head;
+	struct node* fir = head;
+	struct node* sec = head->next;
+	while (sec != NULL && sec->next != NULL){
+		head = head->next;
+		sec = head->next->next;
+	}
+	sec = head->next;
+	head->next = NULL;
+	return merge(sortLinkedList(fir), sortLinkedList(sec));
 	return NULL;
+}
+
+struct node* merge(struct node* list1, struct node* list2){
+	struct node* final;
+	if (list2 == NULL)
+		return list1;
+	else if (list1 == NULL)
+		return list2;
+	else if (list1->num >= list2->num){
+		final = list2;
+		final->next = merge(list1, list2->next);
+	}
+	else{
+		final = list1;
+		final->next = merge(list1->next, list2);
+	}
+	return final;
 }
